@@ -1,0 +1,28 @@
+task createGitProperties << {
+    def name2cmd = [
+            'git.branch'     : 'git rev-parse --abbrev-ref HEAD',
+            'git.commit.id'  : 'git rev-parse --short HEAD',
+            'git.commit.time': 'git log -1 --format="%cd"'
+    ]
+
+    def file = file("${sourceSets.main.output.resourcesDir}/git.properties")
+    file.delete()
+
+    name2cmd.each() { name, cmd ->
+        def proc = cmd.execute()
+        proc.waitFor()
+        def value
+        if (proc.exitValue() != 0) {
+            logger.error('Error when executing command {}: {}', cmd, proc.err.text)
+            value = 'Not available'
+        } else {
+            value = proc.in.text
+        }
+        file.append("$name = $value")
+    }
+
+    logger.info('Generated file is:')
+    logger.info(file.text)
+}
+
+jar.dependsOn createGitProperties

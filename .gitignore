@@ -1,0 +1,18 @@
+# Intellij files
+.idea
+*iml
+*ipr
+*iws
+
+# Gradle and its plugins
+.gradle
+.pid.lock
+
+# Build directory
+build
+
+# Logs
+logs
+
+# Last commit details
+git.properties

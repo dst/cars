@@ -1,0 +1,13 @@
+apply plugin: "coveralls"
+apply plugin: 'jacoco'
+
+jacoco {
+    toolVersion = '0.7.4.201502262128'
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled = true // coveralls plugin depends on xml format report
+        html.enabled = true
+    }
+}

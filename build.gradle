@@ -1,0 +1,32 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        maven { url "http://repo.spring.io/libs-snapshot" }
+    }
+
+    dependencies {
+        classpath "org.kt3k.gradle.plugin:coveralls-gradle-plugin:0.3.0"
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:1.2.1.RELEASE"
+    }
+}
+
+apply plugin: "eclipse"
+apply plugin: "groovy"
+apply plugin: "idea"
+apply plugin: "java"
+apply plugin: "spring-boot"
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+jar {
+    baseName = "cars"
+}
+
+apply from: "$rootDir/gradle/codeQuality.gradle"
+apply from: "$rootDir/gradle/createGitProperties.gradle"
+apply from: "$rootDir/gradle/dependencies.gradle"
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.8'
+}

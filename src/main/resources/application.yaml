@@ -1,0 +1,6 @@
+info.app:
+  name: cars
+  description: RESTful web service for storing cars
+  version: 0.1
+
+server.port: 8888
