@@ -3,9 +3,19 @@ repositories {
     maven { url "http://repo.spring.io/libs-snapshot" }
 }
 
+apply plugin: 'com.ofg.uptodate'
+
+build.dependsOn 'uptodate'
+
+uptodate {
+    breakTheBuild {
+        enabled = true
+    }
+}
+
 ext {
-    springBootVersion = '1.2.1.RELEASE'
-    spockVersion = '0.7-groovy-2.0'
+    springBootVersion = '1.2.7.RELEASE'
+    spockVersion = '1.0-groovy-2.4'
 }
 
 dependencies {
@@ -18,19 +28,19 @@ dependencies {
     runtime 'com.h2database:h2'
 
     // Logging
-    compile 'ch.qos.logback:logback-classic:1.1.2'
+    compile 'ch.qos.logback:logback-classic:1.1.3'
 
     // Validation
-    compile 'org.hibernate:hibernate-validator:5.1.1.Final'
+    compile 'org.hibernate:hibernate-validator:5.2.2.Final'
 
     // Groovy
-    compile 'org.codehaus.groovy:groovy-all:2.3.9:indy'
+    compile 'org.codehaus.groovy:groovy-all:2.4.5'
 
     // Utils
     compile 'org.projectlombok:lombok:1.16.6'
 
     // Swagger documentation
-    compile 'com.mangofactory:swagger-springmvc:0.8.4'
+    compile 'com.mangofactory:swagger-springmvc:1.0.2'
 
     testCompile "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
     testCompile "org.spockframework:spock-core:${spockVersion}"
