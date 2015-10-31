@@ -1,4 +1,4 @@
-package com.stefanski.cars.error;
+package com.stefanski.cars.api;
 
 import com.wordnik.swagger.annotations.ApiModel;
 import com.wordnik.swagger.annotations.ApiModelProperty;
@@ -14,9 +14,9 @@ import org.springframework.http.HttpStatus;
 @ApiModel
 public class ErrorResp {
 
-    static final String INVALID_PARAM_ERR = "Invalid parameter";
-    static final String INVALID_TYPE_ERR = "Invalid type of parameter";
-    static final String RESOURCE_NOT_FOUND_ERR = "Resource does not exist";
+    public static final String INVALID_PARAM_ERR = "Invalid parameter";
+    public static final String INVALID_TYPE_ERR = "Invalid type of parameter";
+    public static final String RESOURCE_NOT_FOUND_ERR = "Resource does not exist";
 
     @ApiModelProperty(value = "short error description", required = true)
     private String error;

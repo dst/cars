@@ -1,17 +1,17 @@
-package com.stefanski.cars.store
+package com.stefanski.cars.api
 /**
  * @author Dariusz Stefanski
  */
-class CarFixture {
+class CarToStoreExamples {
 
     public static final long CAR_ID = 123L
 
-    static final CarDto OPEL_CORSA = new CarDto(
+    static final CarToStore OPEL_CORSA = new CarToStore(
             make: 'Opel', model: 'Corsa', year: 2010, engineDisplacement: 1300,
             attributes: ['origin': 'Poland', 'mileage': '90120']
     );
 
-    static final CarDto CAR_WITHOUT_MODEL = new CarDto(
+    static final CarToStore CAR_WITHOUT_MODEL = new CarToStore(
             make: 'Opel', year: 2010, engineDisplacement: 1300,
             attributes: ['origin': 'Poland', 'mileage': '90120']
     );

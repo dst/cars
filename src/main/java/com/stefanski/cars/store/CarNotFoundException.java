@@ -7,7 +7,7 @@ package com.stefanski.cars.store;
  */
 public class CarNotFoundException extends RuntimeException {
 
-    public CarNotFoundException(String message) {
-        super(message);
+    public CarNotFoundException(Long carId) {
+        super(String.format("Car with id %d does not exist", carId));
     }
 }

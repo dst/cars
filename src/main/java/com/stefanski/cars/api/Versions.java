@@ -1,4 +1,4 @@
-package com.stefanski.cars.rest;
+package com.stefanski.cars.api;
 
 public final class Versions {
 

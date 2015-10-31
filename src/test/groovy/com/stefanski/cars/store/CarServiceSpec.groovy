@@ -2,44 +2,81 @@ package com.stefanski.cars.store
 
 import spock.lang.Specification
 
-import static com.stefanski.cars.store.CarFixture.CAR_ID
-import static com.stefanski.cars.store.CarFixture.OPEL_CORSA
+import static com.stefanski.cars.api.CarToStoreExamples.CAR_ID
 
 /**
  * @author Dariusz Stefanski
  */
 class CarServiceSpec extends Specification {
 
+    CarService carService
+    CarRepository carRepository = Mock()
+
+    def setup() {
+        carService = new CarService(carRepository)
+    }
+
+    def 'should throw exception when finding car which does not exist'() {
+        given:
+            carRepository.findOne(_) >> null
+        when:
+            carService.findCar(CAR_ID)
+        then:
+            thrown(CarNotFoundException)
+    }
+
+    def 'should throw exception when deleting car which does not exist'() {
+        given:
+            carRepository.findOne(_) >> null
+        when:
+            carService.deleteCar(CAR_ID)
+        then:
+            thrown(CarNotFoundException)
+    }
+
+    def 'should throw exception when updating car which does not exist'() {
+        given:
+            carRepository.findOne(_) >> null
+        when:
+            carService.updateCar(new Car())
+        then:
+            thrown(CarNotFoundException)
+    }
+
     def 'should find car by id'() {
         given:
             Car car = new Car(id: CAR_ID)
-            CarRepository carRepository = Stub()
             carRepository.findOne(CAR_ID) >> car
-            CarService carService = new CarService(carRepository, null)
         when:
-            Car foundCar = carService.findById(CAR_ID)
+            Car foundCar = carService.findCar(CAR_ID)
         then:
             foundCar.id == car.id
-    }
-
-    def 'should throw exception when car doesnt exist'() {
-        given:
-            CarRepository carRepository = Stub()
-            carRepository.findOne(_) >> null
-            CarService carService = new CarService(carRepository, null)
-        when:
-            carService.findById(CAR_ID)
-        then:
-            thrown(CarNotFoundException)
     }
 
     def 'should return id of created car'() {
         given:
             Car car = new Car(id: CAR_ID)
-            CarRepository carRepository = Stub()
             carRepository.save(_) >> car
-            CarService carService = new CarService(carRepository, Stub(AttributeRepository))
         expect:
-            carService.create(OPEL_CORSA) == CAR_ID
+            carService.createCar(car) == CAR_ID
+    }
+
+    def 'should update car'() {
+        given:
+            Car car = new Car(id: CAR_ID)
+            carRepository.exists(CAR_ID) >> true
+        when:
+            carService.updateCar(car)
+        then:
+            1 * carRepository.save(car)
+    }
+
+    def 'should delete car'() {
+        given:
+            carRepository.exists(CAR_ID) >> true
+        when:
+            carService.deleteCar(CAR_ID)
+        then:
+            1 * carRepository.delete(CAR_ID)
     }
 }

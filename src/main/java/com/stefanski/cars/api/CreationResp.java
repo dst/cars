@@ -1,20 +1,17 @@
-package com.stefanski.cars.store;
+package com.stefanski.cars.api;
 
 import com.wordnik.swagger.annotations.ApiModel;
 import com.wordnik.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 
 /**
  * @author Dariusz Stefanski
  */
-@Data
 @ApiModel
+@Data
 class CreationResp {
 
     @ApiModelProperty(value = "ID of created object", required = true)
-    private Long id;
-
-    public CreationResp(Long id) {
-        this.id = id;
-    }
+    private final Long id;
 }

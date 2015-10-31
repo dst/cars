@@ -1,15 +1,18 @@
-package com.stefanski.cars.store;
+package com.stefanski.cars.api;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
-
+import java.util.Set;
 import javax.validation.constraints.NotNull;
 
 import com.wordnik.swagger.annotations.ApiModel;
 import com.wordnik.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.hibernate.validator.constraints.NotEmpty;
-import org.springframework.beans.BeanUtils;
+
+import com.stefanski.cars.store.Attribute;
+import com.stefanski.cars.store.Car;
 
 
 /**
@@ -17,7 +20,7 @@ import org.springframework.beans.BeanUtils;
  */
 @Data
 @ApiModel
-class CarDto {
+class CarToStore {
 
     @NotEmpty
     @ApiModelProperty(required = true)
@@ -37,19 +40,24 @@ class CarDto {
 
     private Map<String, String> attributes = new HashMap<>();
 
-    public CarDto() {
+    public CarToStore() {
     }
 
     public String getAttribute(String name) {
         return attributes.get(name);
     }
 
-    public static CarDto fromCar(Car car) {
-        CarDto carDto = new CarDto();
-        BeanUtils.copyProperties(car, carDto);
-        carDto.setAttributes(car.getAttributesMap());
-        return carDto;
+    Car toCar() {
+        return new Car(make, model, year, engineDisplacement, createCarAttributes());
     }
 
+    private Set<Attribute> createCarAttributes() {
+        Set<Attribute> carAttributes = new HashSet<>();
+        attributes.forEach((name, value) -> {
+            Attribute attribute = new Attribute(name, value.toString());
+            carAttributes.add(attribute);
+        });
+        return carAttributes;
+    }
 }
 

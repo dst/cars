@@ -1,7 +1,7 @@
 package com.stefanski.cars
 
-import com.stefanski.cars.Application
-import com.stefanski.cars.store.CarFixture
+import com.stefanski.cars.api.CarToStore
+import com.stefanski.cars.api.CarToStoreExamples
 import groovy.json.JsonSlurper
 import org.springframework.boot.test.IntegrationTest
 import org.springframework.boot.test.SpringApplicationContextLoader
@@ -13,10 +13,9 @@ import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Stepwise
 
-import static com.stefanski.cars.rest.Versions.API_CONTENT_TYPE
-import static com.stefanski.cars.store.CarFixture.CAR_WITHOUT_MODEL
-import static com.stefanski.cars.store.CarFixture.OPEL_CORSA
-import static com.stefanski.cars.store.CarFixture.OPEL_CORSA
+import static com.stefanski.cars.api.CarToStoreExamples.CAR_WITHOUT_MODEL
+import static com.stefanski.cars.api.Versions.API_CONTENT_TYPE
+import static CarToStoreExamples.OPEL_CORSA
 import static org.springframework.http.HttpMethod.DELETE
 import static org.springframework.http.HttpMethod.PUT
 import static org.springframework.http.HttpStatus.BAD_REQUEST
@@ -47,32 +46,28 @@ class EndToEndIntegrationSpec extends Specification {
 
     def "should return 404 when getting not existing car"() {
         when:
-            def response = rest.getForEntity("$CARS_URL/123", String)
+            def response = findCar(123L)
         then:
             response.statusCode == NOT_FOUND
     }
 
     def "should return 404 when updating not existing car"() {
-        given:
-            def entity = requestWith(OPEL_CORSA)
         when:
-            def response = rest.exchange("$CARS_URL/123", PUT, entity, String)
+            def response = updateCar(123L, OPEL_CORSA)
         then:
             response.statusCode == NOT_FOUND
     }
 
     def "should return 404 when deleting not existing car"() {
         when:
-            def response = rest.exchange("$CARS_URL/123", DELETE, null, String)
+            def response = deleteCar(123L)
         then:
             response.statusCode == NOT_FOUND
     }
 
     def "validation should fail when car does not contain model"() {
-        given:
-            def entity = requestWith(CarFixture.CAR_WITHOUT_MODEL)
         when:
-            def response = rest.postForEntity(CARS_URL, entity, String)
+            def response = createCar(CAR_WITHOUT_MODEL)
         then:
             response.statusCode == BAD_REQUEST
             def jsonResp = parseJson(response)
@@ -81,10 +76,8 @@ class EndToEndIntegrationSpec extends Specification {
     }
 
     def "should create car"() {
-        given:
-            def entity = requestWith(OPEL_CORSA)
         when:
-            def response = rest.postForEntity(CARS_URL, entity, String)
+            def response = createCar(OPEL_CORSA)
             carId = parseJson(response)['id']
         then:
             response.statusCode == CREATED
@@ -93,39 +86,56 @@ class EndToEndIntegrationSpec extends Specification {
 
     def "should find car"() {
         when:
-            def response = rest.getForEntity("$CARS_URL/$carId", String)
+            def response = findCar(carId)
         then:
+            response.statusCode == OK
             def jsonResp = parseJson(response)
-            jsonResp['make'] == OPEL_CORSA.make
-            jsonResp['model'] == OPEL_CORSA.model
-            jsonResp['attributes']['mileage'] == OPEL_CORSA.getAttribute('mileage')
+            assertTheSame(jsonResp, OPEL_CORSA)
     }
 
     def "should update car"() {
         given:
             def car = OPEL_CORSA
             car.year = 2015
+            car.attributes.remove('origin')
             car.attributes['mileage'] = '1'
-            def entity = requestWith(car)
+            car.attributes['speed'] = 'fast'
         when:
-            def response = rest.exchange("$CARS_URL/${carId}", PUT, entity, String)
+            def response = updateCar(carId, car)
         then:
             response.statusCode == OK
-            def jsonResp = parseJson(rest.getForEntity("$CARS_URL/$carId", String))
-            jsonResp['year'] == car.year
-            jsonResp['attributes']['mileage'] == car.getAttribute('mileage')
+            def jsonResp = parseJson(findCar(carId))
+            assertTheSame(jsonResp, car)
     }
 
     def "should delete car"() {
         when:
-            def response = rest.exchange("$CARS_URL/$carId", DELETE, null, String)
+            def response = deleteCar(carId)
         then:
             response.statusCode == OK
-            rest.getForEntity("$CARS_URL/$carId", String).statusCode == NOT_FOUND
+            findCar(carId).statusCode == NOT_FOUND
+    }
+
+    private ResponseEntity<String> createCar(CarToStore car) {
+        def entity = requestWith(car)
+        return rest.postForEntity(CARS_URL, entity, String)
+    }
+
+    private ResponseEntity<String> findCar(Long carId) {
+        return rest.getForEntity("$CARS_URL/$carId", String)
+    }
+
+    private ResponseEntity<String> updateCar(Long carId, CarToStore car) {
+        def entity = requestWith(car)
+        return rest.exchange("$CARS_URL/${carId}", PUT, entity, String)
+    }
+
+    private ResponseEntity<String> deleteCar(Long carId) {
+        return rest.exchange("$CARS_URL/$carId", DELETE, null, String)
     }
 
     private Object parseJson(ResponseEntity<String> response) {
-        new JsonSlurper().parseText(response.body)
+        return new JsonSlurper().parseText(response.body)
     }
 
     private HttpEntity<Object> requestWith(Object body) {
@@ -134,4 +144,14 @@ class EndToEndIntegrationSpec extends Specification {
         return new HttpEntity<Object>(body, headers)
     }
 
+    private void assertTheSame(Object json, CarToStore car) {
+        assert json['make'] == car.make
+        assert json['model'] == car.model
+        assert json['year'] == car.year
+        assert json['engineDisplacement'] == car.engineDisplacement
+        assert json['attributes'].size() == car.attributes.size()
+        OPEL_CORSA.attributes.each {name, value ->
+            assert json['attributes'][name] == value
+        }
+    }
 }

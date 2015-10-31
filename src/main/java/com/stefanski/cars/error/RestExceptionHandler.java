@@ -8,9 +8,10 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import com.stefanski.cars.api.ErrorResp;
 import com.stefanski.cars.store.CarNotFoundException;
 
-import static com.stefanski.cars.error.ErrorResp.*;
+import static com.stefanski.cars.api.ErrorResp.*;
 import static java.util.stream.Collectors.joining;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
@@ -33,15 +34,16 @@ class RestExceptionHandler {
     public ResponseEntity<ErrorResp> handleValidationError(MethodArgumentNotValidException ex) {
         BindingResult result = ex.getBindingResult();
         log.warn("Validation error: {}", result);
+        String message = createErrorMessage(result);
+        ErrorResp error = new ErrorResp(INVALID_PARAM_ERR, message, BAD_REQUEST);
+        return new ResponseEntity<>(error, BAD_REQUEST);
+    }
 
-        String message = result.getFieldErrors()
-                .stream()
+    private String createErrorMessage(BindingResult result) {
+        return result.getFieldErrors().stream()
                 .map(ParameterError::fromFieldError)
                 .map(ParameterError::getDescription)
                 .collect(joining(";"));
-
-        ErrorResp error = new ErrorResp(INVALID_PARAM_ERR, message, BAD_REQUEST);
-        return new ResponseEntity<>(error, BAD_REQUEST);
     }
 
     @ExceptionHandler(TypeMismatchException.class)

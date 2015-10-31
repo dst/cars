@@ -1,15 +1,14 @@
 package com.stefanski.cars.store;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import javax.persistence.*;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import static javax.persistence.CascadeType.ALL;
+import static javax.persistence.FetchType.EAGER;
 
 
 /**
@@ -17,7 +16,8 @@ import static javax.persistence.CascadeType.ALL;
  */
 @Data
 @Entity
-class Car {
+@NoArgsConstructor
+public class Car {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -37,10 +37,16 @@ class Car {
     @Column(nullable = false)
     private int engineDisplacement;
 
-    @OneToMany(mappedBy = "car", cascade = ALL)
-    private List<Attribute> attributes = new LinkedList<>();
+    @OneToMany(fetch = EAGER, cascade = ALL)
+    private Set<Attribute> attributes = new HashSet<>();
 
-    public Car() {
+    public Car(String make, String model, Integer year, Integer engineDisplacement,
+               Set<Attribute> attributes) {
+        this.make = make;
+        this.model = model;
+        this.year = year;
+        this.engineDisplacement = engineDisplacement;
+        this.attributes = attributes;
     }
 
     public void addAttribute(Attribute attribute) {
