@@ -1,13 +1,13 @@
 buildscript {
     repositories {
         mavenCentral()
-        maven { url "http://repo.spring.io/libs-snapshot" }
+        maven { url 'http://repo.spring.io/libs-snapshot' }
     }
 
     dependencies {
         classpath 'com.ofg:uptodate-gradle-plugin:1.6.2'
-        classpath "org.kt3k.gradle.plugin:coveralls-gradle-plugin:0.3.0"
-        classpath "org.springframework.boot:spring-boot-gradle-plugin:1.2.1.RELEASE"
+        classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.4.0'
+        classpath 'org.springframework.boot:spring-boot-gradle-plugin:1.2.7.RELEASE'
     }
 }
 
