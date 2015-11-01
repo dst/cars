@@ -1,14 +1,13 @@
 package com.stefanski.cars;
 
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.ComponentScan;
+import org.springframework.cache.annotation.EnableCaching;
 
 /**
  * @author Dariusz Stefanski
  */
-@EnableAutoConfiguration
+@EnableCaching
 @SpringBootApplication
 public class Application {
 

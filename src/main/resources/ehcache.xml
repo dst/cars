@@ -1,0 +1,9 @@
+<ehcache>
+    <cache name="cars"
+            maxEntriesLocalHeap="10000"
+            eternal="false"
+            timeToIdleSeconds="3600"
+            timeToLiveSeconds="3600"
+            memoryStoreEvictionPolicy="LRU">
+    </cache>
+</ehcache>
