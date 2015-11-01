@@ -1,5 +1,8 @@
 package com.stefanski.cars.api;
 
+/**
+ * @author Dariusz Stefanski
+ */
 public final class Versions {
 
     private Versions() {

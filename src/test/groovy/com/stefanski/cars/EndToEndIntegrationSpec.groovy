@@ -13,9 +13,9 @@ import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Stepwise
 
-import static com.stefanski.cars.api.CarToStoreExamples.CAR_WITHOUT_MODEL
+import static CarToStoreExamples.CAR_WITHOUT_MODEL_TO_STORE
 import static com.stefanski.cars.api.Versions.API_CONTENT_TYPE
-import static CarToStoreExamples.OPEL_CORSA
+import static CarToStoreExamples.OPEL_CORSA_TO_STORE
 import static org.springframework.http.HttpMethod.DELETE
 import static org.springframework.http.HttpMethod.PUT
 import static org.springframework.http.HttpStatus.BAD_REQUEST
@@ -37,6 +37,7 @@ import static org.springframework.http.HttpStatus.OK
 class EndToEndIntegrationSpec extends Specification {
 
     private static final String CARS_URL = "http://localhost:8888/cars"
+    private static final long NOT_EXISTING_CAR_ID = 123L
 
     @Shared
     TestRestTemplate rest = new TestRestTemplate()
@@ -46,28 +47,28 @@ class EndToEndIntegrationSpec extends Specification {
 
     def "should return 404 when getting not existing car"() {
         when:
-            def response = findCar(123L)
+            def response = findCar(NOT_EXISTING_CAR_ID)
         then:
             response.statusCode == NOT_FOUND
     }
 
     def "should return 404 when updating not existing car"() {
         when:
-            def response = updateCar(123L, OPEL_CORSA)
+            def response = updateCar(NOT_EXISTING_CAR_ID, OPEL_CORSA_TO_STORE)
         then:
             response.statusCode == NOT_FOUND
     }
 
     def "should return 404 when deleting not existing car"() {
         when:
-            def response = deleteCar(123L)
+            def response = deleteCar(NOT_EXISTING_CAR_ID)
         then:
             response.statusCode == NOT_FOUND
     }
 
     def "validation should fail when car does not contain model"() {
         when:
-            def response = createCar(CAR_WITHOUT_MODEL)
+            def response = createCar(CAR_WITHOUT_MODEL_TO_STORE)
         then:
             response.statusCode == BAD_REQUEST
             def jsonResp = parseJson(response)
@@ -77,7 +78,7 @@ class EndToEndIntegrationSpec extends Specification {
 
     def "should create car"() {
         when:
-            def response = createCar(OPEL_CORSA)
+            def response = createCar(OPEL_CORSA_TO_STORE)
             carId = parseJson(response)['id']
         then:
             response.statusCode == CREATED
@@ -90,12 +91,12 @@ class EndToEndIntegrationSpec extends Specification {
         then:
             response.statusCode == OK
             def jsonResp = parseJson(response)
-            assertTheSame(jsonResp, OPEL_CORSA)
+            assertTheSame(jsonResp, OPEL_CORSA_TO_STORE)
     }
 
     def "should update car"() {
         given:
-            def car = OPEL_CORSA
+            def car = OPEL_CORSA_TO_STORE
             car.year = 2015
             car.attributes.remove('origin')
             car.attributes['mileage'] = '1'
@@ -150,7 +151,7 @@ class EndToEndIntegrationSpec extends Specification {
         assert json['year'] == car.year
         assert json['engineDisplacement'] == car.engineDisplacement
         assert json['attributes'].size() == car.attributes.size()
-        OPEL_CORSA.attributes.each {name, value ->
+        OPEL_CORSA_TO_STORE.attributes.each {name, value ->
             assert json['attributes'][name] == value
         }
     }

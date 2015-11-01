@@ -2,12 +2,12 @@ package com.stefanski.cars.store
 
 import spock.lang.Specification
 
-import static com.stefanski.cars.api.CarToStoreExamples.CAR_ID
-
 /**
  * @author Dariusz Stefanski
  */
 class CarServiceSpec extends Specification {
+
+    static final long CAR_ID = 123L
 
     CarService carService
     CarRepository carRepository = Mock()

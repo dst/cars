@@ -26,7 +26,7 @@ class RestExceptionHandler {
     @ExceptionHandler(CarNotFoundException.class)
     public ResponseEntity<ErrorResp> handleCarNotFoundException(CarNotFoundException ex) {
         log.warn("Car not found: {}", ex.getMessage());
-        ErrorResp error = new ErrorResp(RESOURCE_NOT_FOUND_ERR, ex.getMessage(), NOT_FOUND);
+        ErrorResp error = new ErrorResp(CAR_NOT_FOUND_ERR, ex.getMessage(), NOT_FOUND);
         return new ResponseEntity<>(error, NOT_FOUND);
     }
 
