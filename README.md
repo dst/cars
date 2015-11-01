@@ -44,8 +44,8 @@ For local run it can be found at http://localhost:8888
 ## Technology stack
 - back-end: Java 8, Spring Boot, Spring Data, JPA with Hibernate, embedded H2 Database, Lombok, Logback
 - testing: Spock
-- building: gradle
-- code metrics: JaCoCo
+- building: gradle, Travis
+- code quality: JaCoCo, coveralls
 
 ## Disclaimer
 All Spring Boot Actuator endpoints are turn on and are available at server port. It is convenience when testing,
