@@ -2,7 +2,11 @@
 [![Build Status](https://travis-ci.org/dst/cars.svg)](https://travis-ci.org/dst/cars)
 [![Coverage Status](https://coveralls.io/repos/dst/cars/badge.png)](https://coveralls.io/r/dst/cars)
 
-RESTful web service for storing cars.
+Entity-attribute-value (EAV) model implementation based on car. Cars in EAV model are kept in
+a rational database (embedded H2). Attributes are also kept in a document database (embedded MongoDB)
+to support faster search operations.
+
+Application can be run as fat jar and RESTful API is available.
 
 ## System dependencies
 - Java 8
