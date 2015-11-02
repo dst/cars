@@ -19,8 +19,7 @@ class CarFinderSpec extends Specification {
             carStore.findCar(OPEL_CORSA.id) >> OPEL_CORSA
             CarFinder carFinder = new CarFinder(attributeSearchStore, carStore)
         when:
-            def filters = new CarFilters(attributes: attributes)
-            def cars = carFinder.find(filters)
+            def cars = carFinder.find(attributes)
         then:
             cars[0] == OPEL_CORSA
     }

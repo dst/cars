@@ -150,7 +150,7 @@ class EndToEndIntegrationSpec extends Specification {
     }
 
     private ResponseEntity<String> findCar(Map<String, String> attributes) {
-        def entity = requestWith(new CarFilters(attributes: attributes))
+        def entity = requestWith(attributes)
         return rest.postForEntity("$CARS_URL/search", entity, String)
     }
 

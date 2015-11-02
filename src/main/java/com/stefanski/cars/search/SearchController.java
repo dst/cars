@@ -1,6 +1,7 @@
 package com.stefanski.cars.search;
 
 import java.util.List;
+import java.util.Map;
 import javax.validation.Valid;
 
 import com.wordnik.swagger.annotations.*;
@@ -46,8 +47,8 @@ class SearchController {
             @ApiResponse(code = HTTP_BAD_REQUEST, message = "Invalid input", response = ErrorResp.class)
     })
     ResponseEntity<List<CarResource>> findCars(
-            @ApiParam(value = "Filters for searching cars")
-            @Valid @RequestBody CarFilters filters) {
+            @ApiParam(value = "Filters for searching cars, example: {\"speed\": \"fast\"}")
+            @Valid @RequestBody Map<String, String> filters) {
 
         List<Car> cars = carFinder.find(filters);
         List<CarResource> carResources = cars.stream()

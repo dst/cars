@@ -58,6 +58,10 @@ Example car in json format which can be stored:
       }
     }
 
+Example search filter:
+
+    {"speed": "fast"}
+
 ## Technology stack
 - back-end: Java 8, Spring Boot, Spring Data, JPA with Hibernate, embedded H2, embedded MongoDB, Lombok, Logback
 - testing: Spock
