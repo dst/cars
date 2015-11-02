@@ -7,6 +7,8 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.stefanski.cars.search.AttributeSearchStore;
+
 import static com.stefanski.cars.store.CacheConfiguration.CAR_CACHE;
 
 /**
@@ -18,10 +20,12 @@ import static com.stefanski.cars.store.CacheConfiguration.CAR_CACHE;
 public class CarService {
 
     private CarRepository carRepository;
+    private AttributeSearchStore attributeSearchStore;
 
     @Autowired
-    public CarService(CarRepository carRepository) {
+    public CarService(CarRepository carRepository, AttributeSearchStore attributeSearchStore) {
         this.carRepository = carRepository;
+        this.attributeSearchStore = attributeSearchStore;
     }
 
     @Cacheable(CAR_CACHE)
@@ -37,6 +41,7 @@ public class CarService {
     public Long createCar(Car car) {
         Car createdCar = carRepository.save(car);
         log.debug("Created car: {}", createdCar);
+        attributeSearchStore.insertAttributesOf(car);
         return createdCar.getId();
     }
 
@@ -44,6 +49,7 @@ public class CarService {
     public void updateCar(Car car) {
         throwIfNoSuchCar(car.getId());
         carRepository.save(car);
+        attributeSearchStore.updateAttributesOf(car);
         log.debug("Updated car: {}", car);
     }
 
@@ -51,6 +57,7 @@ public class CarService {
     public void deleteCar(Long carId) {
         throwIfNoSuchCar(carId);
         carRepository.delete(carId);
+        attributeSearchStore.deleteAttributesOf(carId);
         log.debug("Deleted car: {}", carId);
     }
 

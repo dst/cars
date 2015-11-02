@@ -1,5 +1,6 @@
 package com.stefanski.cars.store
 
+import com.stefanski.cars.search.AttributeSearchStore
 import spock.lang.Specification
 
 /**
@@ -13,7 +14,7 @@ class CarServiceSpec extends Specification {
     CarRepository carRepository = Mock()
 
     def setup() {
-        carService = new CarService(carRepository)
+        carService = new CarService(carRepository, Stub(AttributeSearchStore))
     }
 
     def 'should throw exception when finding car which does not exist'() {

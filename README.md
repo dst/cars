@@ -55,7 +55,7 @@ Example car in json format which can be stored:
     }
 
 ## Technology stack
-- back-end: Java 8, Spring Boot, Spring Data, JPA with Hibernate, embedded H2 Database, Lombok, Logback
+- back-end: Java 8, Spring Boot, Spring Data, JPA with Hibernate, embedded H2, embedded MongoDB, Lombok, Logback
 - testing: Spock
 - building: gradle, Travis
 - code quality: JaCoCo, coveralls

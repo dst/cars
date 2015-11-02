@@ -4,3 +4,7 @@ info.app:
   version: 0.1
 
 server.port: 8888
+
+mongodb:
+  host: localhost
+  port: 12345
