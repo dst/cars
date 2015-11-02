@@ -3,9 +3,9 @@ package com.stefanski.cars.search
 import com.stefanski.cars.CarApplication
 import com.stefanski.cars.store.Attribute
 import com.stefanski.cars.store.Car
-import com.stefanski.cars.store.DeletedCarEvent
-import com.stefanski.cars.store.NewCarEvent
-import com.stefanski.cars.store.UpdatedCarEvent
+import com.stefanski.cars.store.events.DeletedCarEvent
+import com.stefanski.cars.store.events.NewCarEvent
+import com.stefanski.cars.store.events.UpdatedCarEvent
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.IntegrationTest
 import org.springframework.boot.test.SpringApplicationContextLoader
@@ -22,10 +22,10 @@ import static com.stefanski.cars.store.CarExamples.OPEL_CORSA
 @IntegrationTest
 @WebAppConfiguration
 @ContextConfiguration(classes = [CarApplication], loader = SpringApplicationContextLoader)
-class AttributeSearchStoreIntegrationSpec extends Specification {
+class AttributeStoreIntegrationSpec extends Specification {
 
     @Autowired
-    AttributeSearchStore attributeSearchStore
+    AttributeStore attributeSearchStore
 
     List insertedCars
 

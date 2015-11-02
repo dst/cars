@@ -1,5 +1,8 @@
 package com.stefanski.cars.store
 
+import com.stefanski.cars.store.events.DeletedCarEvent
+import com.stefanski.cars.store.events.NewCarEvent
+import com.stefanski.cars.store.events.UpdatedCarEvent
 import org.springframework.context.ApplicationEventPublisher
 import spock.lang.Specification
 
@@ -75,7 +78,6 @@ class CarStoreSpec extends Specification {
         then:
             1 * carRepository.save(car)
             1 * publisher.publishEvent(_ as UpdatedCarEvent)
-
     }
 
     def 'should delete car and publish event'() {

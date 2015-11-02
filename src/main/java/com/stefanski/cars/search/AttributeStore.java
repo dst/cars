@@ -4,14 +4,15 @@ import java.util.List;
 import java.util.Map;
 
 import com.mongodb.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 import com.stefanski.cars.store.Car;
-import com.stefanski.cars.store.DeletedCarEvent;
-import com.stefanski.cars.store.NewCarEvent;
-import com.stefanski.cars.store.UpdatedCarEvent;
+import com.stefanski.cars.store.events.DeletedCarEvent;
+import com.stefanski.cars.store.events.NewCarEvent;
+import com.stefanski.cars.store.events.UpdatedCarEvent;
 
 import static java.util.stream.Collectors.toList;
 
@@ -19,7 +20,8 @@ import static java.util.stream.Collectors.toList;
  * @author Dariusz Stefanski
  */
 @Component
-public class AttributeSearchStore {
+@Slf4j
+public class AttributeStore {
 
     private static final String DB_NAME = "cars";
     private static final String COLLECTION_NAME = "attributes";
@@ -28,25 +30,28 @@ public class AttributeSearchStore {
     private DBCollection collection;
 
     @Autowired
-    AttributeSearchStore(Mongo mongo) {
+    AttributeStore(Mongo mongo) {
         DB db = mongo.getDB(DB_NAME);
         this.collection = db.getCollection(COLLECTION_NAME);
     }
 
     @EventListener
     public void insertAttributes(NewCarEvent event) {
+        log.debug("Handling event {}", event);
         BasicDBObject doc = createDocument(event.getCar());
         collection.insert(doc);
     }
 
     @EventListener
     public void updateAttributes(UpdatedCarEvent event) {
+        log.debug("Handling event {}", event);
         BasicDBObject doc = createDocument(event.getCar());
         collection.save(doc);
     }
 
     @EventListener
     public void deleteAttributes(DeletedCarEvent event) {
+        log.debug("Handling event {}", event);
         BasicDBObject doc = new BasicDBObject(ID_FIELD, event.getCarId());
         collection.remove(doc);
     }
@@ -55,7 +60,9 @@ public class AttributeSearchStore {
         BasicDBObject queryDoc = new BasicDBObject(query);
         BasicDBObject fieldsDoc = new BasicDBObject(ID_FIELD, 1);
         List<DBObject> dbObjects = collection.find(queryDoc, fieldsDoc).toArray();
-        return extractIds(dbObjects);
+        List<Long> carIds =  extractIds(dbObjects);
+        log.debug("Found {} cars for query {}", carIds);
+        return carIds;
     }
 
     private BasicDBObject createDocument(Car car) {

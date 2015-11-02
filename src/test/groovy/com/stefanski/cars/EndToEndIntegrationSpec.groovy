@@ -112,7 +112,7 @@ class EndToEndIntegrationSpec extends Specification {
             opelCorsa = OPEL_CORSA_RESOURCE
             opelCorsa.year = 2015
             opelCorsa.attributes.remove('origin')
-            opelCorsa.attributes['mileage'] = '1'
+            opelCorsa.attributes['age'] = 'very new'
             opelCorsa.attributes['speed'] = 'fast'
         when:
             def response = updateCar(carId, opelCorsa)

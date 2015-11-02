@@ -8,7 +8,9 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.stefanski.cars.search.AttributeSearchStore;
+import com.stefanski.cars.store.events.DeletedCarEvent;
+import com.stefanski.cars.store.events.NewCarEvent;
+import com.stefanski.cars.store.events.UpdatedCarEvent;
 
 import static com.stefanski.cars.store.CacheConfiguration.CAR_CACHE;
 

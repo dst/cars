@@ -10,10 +10,10 @@ import static com.stefanski.cars.store.CarExamples.OPEL_CORSA
  */
 class CarFinderSpec extends Specification {
 
-    def "should find car"() {
+    def "should find car using all its attributes as filter"() {
         given:
             def attributes = OPEL_CORSA.attributesMap
-            AttributeSearchStore attributeSearchStore = Stub(AttributeSearchStore)
+            AttributeStore attributeSearchStore = Stub(AttributeStore)
             attributeSearchStore.findCars(attributes) >> [OPEL_CORSA.id]
             CarStore carStore = Stub(CarStore)
             carStore.findCar(OPEL_CORSA.id) >> OPEL_CORSA

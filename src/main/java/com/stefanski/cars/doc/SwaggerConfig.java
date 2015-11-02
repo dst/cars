@@ -4,7 +4,6 @@ import com.mangofactory.swagger.configuration.SpringSwaggerConfig;
 import com.mangofactory.swagger.models.dto.ApiInfo;
 import com.mangofactory.swagger.plugin.EnableSwagger;
 import com.mangofactory.swagger.plugin.SwaggerSpringMvcPlugin;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,15 +15,12 @@ import org.springframework.context.annotation.Configuration;
 @EnableSwagger
 class SwaggerConfig {
 
-    @Autowired
-    private SpringSwaggerConfig springSwaggerConfig;
-
-    @Value("${info.app.version}")
-    private String version;
-
     @Bean
-    public SwaggerSpringMvcPlugin customImplementation() {
-        return new SwaggerSpringMvcPlugin(this.springSwaggerConfig)
+    public SwaggerSpringMvcPlugin customImplementation(
+            SpringSwaggerConfig springSwaggerConfig,
+            @Value("${info.app.version}") String version) {
+
+        return new SwaggerSpringMvcPlugin(springSwaggerConfig)
                 .apiInfo(apiInfo())
                 .apiVersion(version)
                 .includePatterns("/cars.*");

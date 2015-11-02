@@ -9,7 +9,7 @@ class CarExamples {
             make: 'Opel', model: 'Corsa', year: 2010, engineDisplacement: 1300,
             attributes: [
                     new Attribute('origin', 'Poland'),
-                    new Attribute('mileage', '90120')
+                    new Attribute('age', 'new')
             ]
     );
 

@@ -16,17 +16,17 @@ import static java.util.stream.Collectors.toList;
 @Component
 public class CarFinder {
 
-    private AttributeSearchStore attributeSearchStore;
+    private AttributeStore attributeStore;
     private CarStore carStore;
 
     @Autowired
-    public CarFinder(AttributeSearchStore attributeSearchStore, CarStore carStore) {
-        this.attributeSearchStore = attributeSearchStore;
+    public CarFinder(AttributeStore attributeStore, CarStore carStore) {
+        this.attributeStore = attributeStore;
         this.carStore = carStore;
     }
 
     public List<Car> find(CarFilters filters) {
-        List<Long> cardIds = attributeSearchStore.findCars(filters.getAttributes());
+        List<Long> cardIds = attributeStore.findCars(filters.getAttributes());
         // I assume a high hit ratio in cars cache, otherwise it'd inefficient and
         // and it'd be better to fetch all cars at once from db
         return cardIds.stream().map(carStore::findCar).collect(toList());

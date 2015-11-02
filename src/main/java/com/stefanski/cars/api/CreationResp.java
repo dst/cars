@@ -1,4 +1,4 @@
-package com.stefanski.cars.store;
+package com.stefanski.cars.api;
 
 import com.wordnik.swagger.annotations.ApiModel;
 import com.wordnik.swagger.annotations.ApiModelProperty;
@@ -9,7 +9,7 @@ import lombok.Data;
  */
 @ApiModel
 @Data
-class CreationResp {
+public class CreationResp {
 
     @ApiModelProperty(value = "ID of created object", required = true)
     private final Long id;
