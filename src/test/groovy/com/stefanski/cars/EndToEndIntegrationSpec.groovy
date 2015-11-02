@@ -1,8 +1,6 @@
 package com.stefanski.cars
 
 import com.stefanski.cars.api.CarResource
-import com.stefanski.cars.search.CarFilters
-import com.stefanski.cars.store.Car
 import groovy.json.JsonSlurper
 import org.springframework.boot.test.IntegrationTest
 import org.springframework.boot.test.SpringApplicationContextLoader
