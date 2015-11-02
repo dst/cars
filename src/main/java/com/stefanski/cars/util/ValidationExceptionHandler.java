@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import com.stefanski.cars.api.ErrorResp;
-import com.stefanski.cars.util.ErrorMessageFactory;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 

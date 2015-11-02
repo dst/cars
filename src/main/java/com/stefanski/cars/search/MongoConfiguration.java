@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 class MongoConfiguration {
 
-    @Bean(destroyMethod="close")
+    @Bean(destroyMethod = "close")
     public Mongo mongo(
             @Value("${mongodb.host}") String host,
             @Value("${mongodb.port}") int port) throws IOException {
