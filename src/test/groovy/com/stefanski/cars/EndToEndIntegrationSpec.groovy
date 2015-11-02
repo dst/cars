@@ -1,5 +1,6 @@
 package com.stefanski.cars
 
+import com.stefanski.cars.search.rest.CarFilters
 import com.stefanski.cars.store.rest.CarToStore
 import groovy.json.JsonSlurper
 import org.springframework.boot.test.IntegrationTest
@@ -84,13 +85,22 @@ class EndToEndIntegrationSpec extends Specification {
             carId != null
     }
 
-    def "should find car"() {
+    def "should find car by id"() {
         when:
             def response = findCar(carId)
         then:
             response.statusCode == OK
             def jsonResp = parseJson(response)
             assertTheSame(jsonResp, OPEL_CORSA_TO_STORE)
+    }
+
+    def "should find car by attributes"() {
+        when:
+            def response = findCar(OPEL_CORSA_TO_STORE.attributes)
+        then:
+            response.statusCode == OK
+            def jsonResp = parseJson(response)
+            assertTheSame(jsonResp[0], OPEL_CORSA_TO_STORE)
     }
 
     def "should update car"() {
@@ -123,6 +133,11 @@ class EndToEndIntegrationSpec extends Specification {
 
     private ResponseEntity<String> findCar(Long carId) {
         return rest.getForEntity("$CARS_URL/$carId", String)
+    }
+
+    private ResponseEntity<String> findCar(Map<String, String> attributes) {
+        def entity = requestWith(new CarFilters(attributes: attributes))
+        return rest.postForEntity("$CARS_URL/search", entity, String)
     }
 
     private ResponseEntity<String> updateCar(Long carId, CarToStore car) {

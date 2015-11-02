@@ -1,4 +1,4 @@
-package com.stefanski.cars.store.rest;
+package com.stefanski.cars.api;
 
 import java.util.Map;
 
@@ -14,7 +14,7 @@ import com.stefanski.cars.store.Car;
 @ApiModel
 @RequiredArgsConstructor
 @Value
-class CarResource {
+public class CarResource {
 
     private final String make;
     private final String model;

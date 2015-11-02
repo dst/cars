@@ -8,19 +8,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
+import com.stefanski.cars.api.CarResource;
 import com.stefanski.cars.store.Car;
 import com.stefanski.cars.store.CarNotFoundException;
-import com.stefanski.cars.store.CarService;
-import com.stefanski.cars.util.ErrorMessageFactory;
+import com.stefanski.cars.store.CarStore;
 import com.stefanski.cars.util.HeadersFactory;
 
 import static com.stefanski.cars.api.Versions.API_CONTENT_TYPE;
 import static com.stefanski.cars.store.rest.ErrorResp.CAR_NOT_FOUND_ERR;
-import static com.stefanski.cars.store.rest.ErrorResp.INVALID_PARAM_ERR;
 import static java.net.HttpURLConnection.*;
 import static org.springframework.http.HttpStatus.*;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
@@ -31,14 +28,14 @@ import static org.springframework.web.bind.annotation.RequestMethod.*;
 @Slf4j
 @RequestMapping("/cars")
 @RestController
-@Api(value = "Cars", description = "Car storage")
+@Api(value = "Cars")
 class StoreController {
 
-    private CarService carService;
+    private CarStore carStore;
 
     @Autowired
-    StoreController(CarService carService) {
-        this.carService = carService;
+    StoreController(CarStore carStore) {
+        this.carStore = carStore;
     }
 
     @RequestMapping(method = POST, consumes = API_CONTENT_TYPE, produces = API_CONTENT_TYPE)
@@ -51,7 +48,7 @@ class StoreController {
             @ApiParam(value = "Car object that needs to be created")
             @Valid @RequestBody CarToStore carToStore) {
 
-        Long carId = carService.createCar(carToStore.toCar());
+        Long carId = carStore.createCar(carToStore.toCar());
         HttpHeaders headers = HeadersFactory.withLocation(carId);
         CreationResp creation = new CreationResp(carId);
         return new ResponseEntity<>(creation, headers, CREATED);
@@ -71,12 +68,12 @@ class StoreController {
 
         Car car = carToStore.toCar();
         car.setId(carId);
-        carService.updateCar(car);
+        carStore.updateCar(car);
         return OK;
     }
 
     @RequestMapping(value = "/{carId}", method = GET)
-    @ApiOperation(value = "Finds car by ID", notes = "Returns a car based on ID",
+    @ApiOperation(value = "Finds a car by ID", notes = "Returns a car based on ID",
             response = CarResource.class)
     @ApiResponses(value = {
             @ApiResponse(code = HTTP_OK, message = "Success"),
@@ -87,12 +84,12 @@ class StoreController {
             @ApiParam(value = "ID of car that needs to be fetched")
             @PathVariable Long carId) {
 
-        Car car = carService.findCar(carId);
+        Car car = carStore.findCar(carId);
         return new ResponseEntity<>(CarResource.fromCar(car), OK);
     }
 
     @RequestMapping(value = "/{carId}", method = DELETE)
-    @ApiOperation(value = "Deletes car by ID")
+    @ApiOperation(value = "Deletes a car by ID")
     @ApiResponses(value = {
             @ApiResponse(code = HTTP_OK, message = "Success"),
             @ApiResponse(code = HTTP_NOT_FOUND, message = "Resource not found", response = ErrorResp.class)
@@ -101,7 +98,7 @@ class StoreController {
             @ApiParam(value = "ID of car that needs to be deleted")
             @PathVariable Long carId) {
 
-        carService.deleteCar(carId);
+        carStore.deleteCar(carId);
         return OK;
     }
 
@@ -110,14 +107,5 @@ class StoreController {
         log.warn("Car not found: {}", ex.getMessage());
         ErrorResp error = new ErrorResp(CAR_NOT_FOUND_ERR, ex.getMessage(), NOT_FOUND);
         return new ResponseEntity<>(error, NOT_FOUND);
-    }
-
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    private ResponseEntity<ErrorResp> handleValidationError(MethodArgumentNotValidException ex) {
-        BindingResult result = ex.getBindingResult();
-        log.warn("Validation error: {}", result);
-        String message = ErrorMessageFactory.fromFailedValidation(result);
-        ErrorResp error = new ErrorResp(INVALID_PARAM_ERR, message, BAD_REQUEST);
-        return new ResponseEntity<>(error, BAD_REQUEST);
     }
 }

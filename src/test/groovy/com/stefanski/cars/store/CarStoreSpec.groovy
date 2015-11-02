@@ -6,15 +6,15 @@ import spock.lang.Specification
 /**
  * @author Dariusz Stefanski
  */
-class CarServiceSpec extends Specification {
+class CarStoreSpec extends Specification {
 
     static final long CAR_ID = 123L
 
-    CarService carService
+    CarStore carService
     CarRepository carRepository = Mock()
 
     def setup() {
-        carService = new CarService(carRepository, Stub(AttributeSearchStore))
+        carService = new CarStore(carRepository, Stub(AttributeSearchStore))
     }
 
     def 'should throw exception when finding car which does not exist'() {

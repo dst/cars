@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,14 +17,14 @@ import static com.stefanski.cars.store.CacheConfiguration.CAR_CACHE;
  */
 @Slf4j
 @Transactional
-@Service
-public class CarService {
+@Component
+public class CarStore {
 
     private CarRepository carRepository;
     private AttributeSearchStore attributeSearchStore;
 
     @Autowired
-    public CarService(CarRepository carRepository, AttributeSearchStore attributeSearchStore) {
+    public CarStore(CarRepository carRepository, AttributeSearchStore attributeSearchStore) {
         this.carRepository = carRepository;
         this.attributeSearchStore = attributeSearchStore;
     }
