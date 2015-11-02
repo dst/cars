@@ -8,3 +8,8 @@ server.port: 8888
 mongodb:
   host: localhost
   port: 12345
+
+spring.datasource.url: jdbc:h2:mem:cars;DB_CLOSE_ON_EXIT=FALSE
+# Other possibilities:
+#spring.datasource.url: jdbc:h2:tcp://localhost/~/cars;DB_CLOSE_ON_EXIT=FALSE
+#spring.datasource.url: jdbc:h2:file:./db/cars;DB_CLOSE_ON_EXIT=FALSE
