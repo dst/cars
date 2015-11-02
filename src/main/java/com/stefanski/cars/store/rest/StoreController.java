@@ -4,7 +4,6 @@ import javax.validation.Valid;
 
 import com.wordnik.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.TypeMismatchException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -22,7 +21,6 @@ import com.stefanski.cars.util.HeadersFactory;
 import static com.stefanski.cars.api.Versions.API_CONTENT_TYPE;
 import static com.stefanski.cars.store.rest.ErrorResp.CAR_NOT_FOUND_ERR;
 import static com.stefanski.cars.store.rest.ErrorResp.INVALID_PARAM_ERR;
-import static com.stefanski.cars.store.rest.ErrorResp.INVALID_TYPE_ERR;
 import static java.net.HttpURLConnection.*;
 import static org.springframework.http.HttpStatus.*;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
@@ -108,25 +106,18 @@ class StoreController {
     }
 
     @ExceptionHandler(CarNotFoundException.class)
-    public ResponseEntity<ErrorResp> handleCarNotFoundException(CarNotFoundException ex) {
+    ResponseEntity<ErrorResp> handleCarNotFoundException(CarNotFoundException ex) {
         log.warn("Car not found: {}", ex.getMessage());
         ErrorResp error = new ErrorResp(CAR_NOT_FOUND_ERR, ex.getMessage(), NOT_FOUND);
         return new ResponseEntity<>(error, NOT_FOUND);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorResp> handleValidationError(MethodArgumentNotValidException ex) {
+    ResponseEntity<ErrorResp> handleValidationError(MethodArgumentNotValidException ex) {
         BindingResult result = ex.getBindingResult();
         log.warn("Validation error: {}", result);
         String message = ErrorMessageFactory.fromFailedValidation(result);
         ErrorResp error = new ErrorResp(INVALID_PARAM_ERR, message, BAD_REQUEST);
-        return new ResponseEntity<>(error, BAD_REQUEST);
-    }
-
-    @ExceptionHandler(TypeMismatchException.class)
-    public ResponseEntity<ErrorResp> handleTypeMismatchException(TypeMismatchException ex) {
-        log.warn("Invalid type of parameter: {}", ex.getMessage());
-        ErrorResp error = new ErrorResp(INVALID_TYPE_ERR, INVALID_TYPE_ERR, BAD_REQUEST);
         return new ResponseEntity<>(error, BAD_REQUEST);
     }
 }
