@@ -1,4 +1,4 @@
-package com.stefanski.cars.api;
+package com.stefanski.cars.store.rest;
 
 import com.wordnik.swagger.annotations.ApiModel;
 import com.wordnik.swagger.annotations.ApiModelProperty;

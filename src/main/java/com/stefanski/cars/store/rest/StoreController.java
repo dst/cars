@@ -1,27 +1,30 @@
-package com.stefanski.cars.api;
+package com.stefanski.cars.store.rest;
 
-import java.net.URI;
 import javax.validation.Valid;
 
 import com.wordnik.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.TypeMismatchException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.*;
 
 import com.stefanski.cars.store.Car;
+import com.stefanski.cars.store.CarNotFoundException;
 import com.stefanski.cars.store.CarService;
+import com.stefanski.cars.util.ErrorMessageFactory;
+import com.stefanski.cars.util.HeadersFactory;
 
 import static com.stefanski.cars.api.Versions.API_CONTENT_TYPE;
+import static com.stefanski.cars.store.rest.ErrorResp.CAR_NOT_FOUND_ERR;
+import static com.stefanski.cars.store.rest.ErrorResp.INVALID_PARAM_ERR;
+import static com.stefanski.cars.store.rest.ErrorResp.INVALID_TYPE_ERR;
 import static java.net.HttpURLConnection.*;
-import static org.springframework.http.HttpStatus.CREATED;
-import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.HttpStatus.*;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 /**
@@ -31,12 +34,12 @@ import static org.springframework.web.bind.annotation.RequestMethod.*;
 @RequestMapping("/cars")
 @RestController
 @Api(value = "Cars", description = "Car storage")
-class CarController {
+class StoreController {
 
     private CarService carService;
 
     @Autowired
-    CarController(CarService carService) {
+    StoreController(CarService carService) {
         this.carService = carService;
     }
 
@@ -51,7 +54,7 @@ class CarController {
             @Valid @RequestBody CarToStore carToStore) {
 
         Long carId = carService.createCar(carToStore.toCar());
-        HttpHeaders headers = getHttpHeadersWithLocation("/{carId}", carId);
+        HttpHeaders headers = HeadersFactory.withLocation(carId);
         CreationResp creation = new CreationResp(carId);
         return new ResponseEntity<>(creation, headers, CREATED);
     }
@@ -87,8 +90,7 @@ class CarController {
             @PathVariable Long carId) {
 
         Car car = carService.findCar(carId);
-        CarResource resp = CarResource.fromCar(car);
-        return new ResponseEntity<>(resp, OK);
+        return new ResponseEntity<>(CarResource.fromCar(car), OK);
     }
 
     @RequestMapping(value = "/{carId}", method = DELETE)
@@ -105,11 +107,26 @@ class CarController {
         return OK;
     }
 
-    private HttpHeaders getHttpHeadersWithLocation(String pathSuffix, Object... args) {
-        HttpHeaders headers = new HttpHeaders();
-        URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
-                .path(pathSuffix).buildAndExpand(args).toUri();
-        headers.setLocation(uri);
-        return headers;
+    @ExceptionHandler(CarNotFoundException.class)
+    public ResponseEntity<ErrorResp> handleCarNotFoundException(CarNotFoundException ex) {
+        log.warn("Car not found: {}", ex.getMessage());
+        ErrorResp error = new ErrorResp(CAR_NOT_FOUND_ERR, ex.getMessage(), NOT_FOUND);
+        return new ResponseEntity<>(error, NOT_FOUND);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ErrorResp> handleValidationError(MethodArgumentNotValidException ex) {
+        BindingResult result = ex.getBindingResult();
+        log.warn("Validation error: {}", result);
+        String message = ErrorMessageFactory.fromFailedValidation(result);
+        ErrorResp error = new ErrorResp(INVALID_PARAM_ERR, message, BAD_REQUEST);
+        return new ResponseEntity<>(error, BAD_REQUEST);
+    }
+
+    @ExceptionHandler(TypeMismatchException.class)
+    public ResponseEntity<ErrorResp> handleTypeMismatchException(TypeMismatchException ex) {
+        log.warn("Invalid type of parameter: {}", ex.getMessage());
+        ErrorResp error = new ErrorResp(INVALID_TYPE_ERR, INVALID_TYPE_ERR, BAD_REQUEST);
+        return new ResponseEntity<>(error, BAD_REQUEST);
     }
 }

@@ -1,4 +1,4 @@
-package com.stefanski.cars.error;
+package com.stefanski.cars.util;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.FieldError;
@@ -8,6 +8,7 @@ import org.springframework.validation.FieldError;
  */
 @RequiredArgsConstructor
 class ParameterError {
+
     private final String field;
     private final String message;
 

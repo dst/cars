@@ -1,27 +1,26 @@
 package com.stefanski.cars
 
-import com.stefanski.cars.api.CarToStore
-import com.stefanski.cars.api.CarToStoreExamples
+import com.stefanski.cars.store.rest.CarToStore
 import groovy.json.JsonSlurper
 import org.springframework.boot.test.IntegrationTest
 import org.springframework.boot.test.SpringApplicationContextLoader
 import org.springframework.boot.test.TestRestTemplate
-import org.springframework.http.*
+import org.springframework.http.HttpEntity
+import org.springframework.http.HttpHeaders
+import org.springframework.http.MediaType
+import org.springframework.http.ResponseEntity
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.web.WebAppConfiguration
 import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Stepwise
 
-import static CarToStoreExamples.CAR_WITHOUT_MODEL_TO_STORE
 import static com.stefanski.cars.api.Versions.API_CONTENT_TYPE
-import static CarToStoreExamples.OPEL_CORSA_TO_STORE
+import static com.stefanski.cars.store.rest.CarToStoreExamples.CAR_WITHOUT_MODEL_TO_STORE
+import static com.stefanski.cars.store.rest.CarToStoreExamples.OPEL_CORSA_TO_STORE
 import static org.springframework.http.HttpMethod.DELETE
 import static org.springframework.http.HttpMethod.PUT
-import static org.springframework.http.HttpStatus.BAD_REQUEST
-import static org.springframework.http.HttpStatus.CREATED
-import static org.springframework.http.HttpStatus.NOT_FOUND
-import static org.springframework.http.HttpStatus.OK
+import static org.springframework.http.HttpStatus.*
 
 /**
  * End-to-end black box tests.
@@ -33,7 +32,7 @@ import static org.springframework.http.HttpStatus.OK
 @Stepwise
 @IntegrationTest
 @WebAppConfiguration
-@ContextConfiguration(classes = [Application], loader = SpringApplicationContextLoader)
+@ContextConfiguration(classes = [CarApplication], loader = SpringApplicationContextLoader)
 class EndToEndIntegrationSpec extends Specification {
 
     private static final String CARS_URL = "http://localhost:8888/cars"

@@ -1,6 +1,6 @@
 package com.stefanski.cars.search
 
-import com.stefanski.cars.Application
+import com.stefanski.cars.CarApplication
 import com.stefanski.cars.store.Attribute
 import com.stefanski.cars.store.Car
 import org.springframework.beans.factory.annotation.Autowired
@@ -18,7 +18,7 @@ import static com.stefanski.cars.store.CarExamples.OPEL_CORSA
  */
 @IntegrationTest
 @WebAppConfiguration
-@ContextConfiguration(classes = [Application], loader = SpringApplicationContextLoader)
+@ContextConfiguration(classes = [CarApplication], loader = SpringApplicationContextLoader)
 class AttributeSearchStoreIntegrationSpec extends Specification {
 
     @Autowired

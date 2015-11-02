@@ -1,5 +1,6 @@
-package com.stefanski.cars.doc
+package com.stefanski.cars.api
 
+import com.stefanski.cars.api.DocController
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.setup.MockMvcBuilders
 import spock.lang.Specification

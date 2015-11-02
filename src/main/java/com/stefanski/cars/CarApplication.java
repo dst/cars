@@ -9,9 +9,9 @@ import org.springframework.cache.annotation.EnableCaching;
  */
 @EnableCaching
 @SpringBootApplication
-public class Application {
+public class CarApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(Application.class, args);
+        SpringApplication.run(CarApplication.class, args);
     }
 }

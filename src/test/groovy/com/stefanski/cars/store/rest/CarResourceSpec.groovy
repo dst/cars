@@ -1,6 +1,7 @@
-package com.stefanski.cars.api
+package com.stefanski.cars.store.rest
 
 import com.stefanski.cars.store.Car
+import com.stefanski.cars.store.rest.CarResource
 import spock.lang.Specification
 
 /**

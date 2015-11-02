@@ -1,4 +1,4 @@
-package com.stefanski.cars.doc;
+package com.stefanski.cars.api;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;

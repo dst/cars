@@ -1,5 +1,4 @@
-package com.stefanski.cars.api
-
+package com.stefanski.cars.store.rest
 /**
  * @author Dariusz Stefanski
  */

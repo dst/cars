@@ -1,4 +1,4 @@
-package com.stefanski.cars.api;
+package com.stefanski.cars.store.rest;
 
 import java.util.HashMap;
 import java.util.HashSet;
