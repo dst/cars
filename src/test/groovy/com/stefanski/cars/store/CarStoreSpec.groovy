@@ -1,6 +1,6 @@
 package com.stefanski.cars.store
 
-import com.stefanski.cars.search.AttributeSearchStore
+import org.springframework.context.ApplicationEventPublisher
 import spock.lang.Specification
 
 /**
@@ -12,9 +12,10 @@ class CarStoreSpec extends Specification {
 
     CarStore carService
     CarRepository carRepository = Mock()
+    ApplicationEventPublisher publisher = Mock()
 
     def setup() {
-        carService = new CarStore(carRepository, Stub(AttributeSearchStore))
+        carService = new CarStore(carRepository, publisher)
     }
 
     def 'should throw exception when finding car which does not exist'() {
@@ -54,15 +55,18 @@ class CarStoreSpec extends Specification {
             foundCar.id == car.id
     }
 
-    def 'should return id of created car'() {
+    def 'should return id of created car and publish event'() {
         given:
             Car car = new Car(id: CAR_ID)
             carRepository.save(_) >> car
-        expect:
-            carService.createCar(car) == CAR_ID
+        when:
+            def carId = carService.createCar(car)
+        then:
+            carId == CAR_ID
+            1 * publisher.publishEvent(_ as NewCarEvent)
     }
 
-    def 'should update car'() {
+    def 'should update car and publish event'() {
         given:
             Car car = new Car(id: CAR_ID)
             carRepository.exists(CAR_ID) >> true
@@ -70,14 +74,17 @@ class CarStoreSpec extends Specification {
             carService.updateCar(car)
         then:
             1 * carRepository.save(car)
+            1 * publisher.publishEvent(_ as UpdatedCarEvent)
+
     }
 
-    def 'should delete car'() {
+    def 'should delete car and publish event'() {
         given:
             carRepository.exists(CAR_ID) >> true
         when:
             carService.deleteCar(CAR_ID)
         then:
             1 * carRepository.delete(CAR_ID)
+            1 * publisher.publishEvent(_ as DeletedCarEvent)
     }
 }

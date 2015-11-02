@@ -2,6 +2,7 @@ package com.stefanski.cars
 
 import com.stefanski.cars.api.CarResource
 import com.stefanski.cars.search.CarFilters
+import com.stefanski.cars.store.Car
 import groovy.json.JsonSlurper
 import org.springframework.boot.test.IntegrationTest
 import org.springframework.boot.test.SpringApplicationContextLoader
@@ -44,6 +45,9 @@ class EndToEndIntegrationSpec extends Specification {
 
     @Shared
     Long carId
+
+    @Shared
+    CarResource opelCorsa
 
     def "should return 404 when getting not existing car"() {
         when:
@@ -105,18 +109,28 @@ class EndToEndIntegrationSpec extends Specification {
 
     def "should update car"() {
         given:
-            def car = OPEL_CORSA_RESOURCE
-            car.year = 2015
-            car.attributes.remove('origin')
-            car.attributes['mileage'] = '1'
-            car.attributes['speed'] = 'fast'
+            opelCorsa = OPEL_CORSA_RESOURCE
+            opelCorsa.year = 2015
+            opelCorsa.attributes.remove('origin')
+            opelCorsa.attributes['mileage'] = '1'
+            opelCorsa.attributes['speed'] = 'fast'
         when:
-            def response = updateCar(carId, car)
+            def response = updateCar(carId, opelCorsa)
         then:
             response.statusCode == OK
             def jsonResp = parseJson(findCar(carId))
-            assertTheSame(jsonResp, car)
+            assertTheSame(jsonResp, opelCorsa)
     }
+
+    def "should find car by updated attributes"() {
+        when:
+            def response = findCar(opelCorsa.attributes)
+        then:
+            response.statusCode == OK
+            def jsonResp = parseJson(response)
+            assertTheSame(jsonResp[0], opelCorsa)
+    }
+
 
     def "should delete car"() {
         when:

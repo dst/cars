@@ -5,9 +5,13 @@ import java.util.Map;
 
 import com.mongodb.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 import com.stefanski.cars.store.Car;
+import com.stefanski.cars.store.DeletedCarEvent;
+import com.stefanski.cars.store.NewCarEvent;
+import com.stefanski.cars.store.UpdatedCarEvent;
 
 import static java.util.stream.Collectors.toList;
 
@@ -29,18 +33,21 @@ public class AttributeSearchStore {
         this.collection = db.getCollection(COLLECTION_NAME);
     }
 
-    public void insertAttributesOf(Car car) {
-        BasicDBObject doc = createDocument(car);
+    @EventListener
+    public void insertAttributes(NewCarEvent event) {
+        BasicDBObject doc = createDocument(event.getCar());
         collection.insert(doc);
     }
 
-    public void updateAttributesOf(Car car) {
-        BasicDBObject doc = createDocument(car);
+    @EventListener
+    public void updateAttributes(UpdatedCarEvent event) {
+        BasicDBObject doc = createDocument(event.getCar());
         collection.save(doc);
     }
 
-    public void deleteAttributesOf(Long carId) {
-        BasicDBObject doc = new BasicDBObject(ID_FIELD, carId);
+    @EventListener
+    public void deleteAttributes(DeletedCarEvent event) {
+        BasicDBObject doc = new BasicDBObject(ID_FIELD, event.getCarId());
         collection.remove(doc);
     }
 

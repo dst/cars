@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,13 +20,13 @@ import static com.stefanski.cars.store.CacheConfiguration.CAR_CACHE;
 @Component
 public class CarStore {
 
-    private CarRepository carRepository;
-    private AttributeSearchStore attributeSearchStore;
+    private final CarRepository carRepository;
+    private final ApplicationEventPublisher publisher;
 
     @Autowired
-    public CarStore(CarRepository carRepository, AttributeSearchStore attributeSearchStore) {
+    public CarStore(CarRepository carRepository, ApplicationEventPublisher publisher) {
         this.carRepository = carRepository;
-        this.attributeSearchStore = attributeSearchStore;
+        this.publisher = publisher;
     }
 
     @Cacheable(CAR_CACHE)
@@ -41,7 +42,7 @@ public class CarStore {
     public Long createCar(Car car) {
         Car createdCar = carRepository.save(car);
         log.debug("Created car: {}", createdCar);
-        attributeSearchStore.insertAttributesOf(car);
+        publisher.publishEvent(new NewCarEvent(createdCar));
         return createdCar.getId();
     }
 
@@ -49,7 +50,7 @@ public class CarStore {
     public void updateCar(Car car) {
         throwIfNoSuchCar(car.getId());
         carRepository.save(car);
-        attributeSearchStore.updateAttributesOf(car);
+        publisher.publishEvent(new UpdatedCarEvent(car));
         log.debug("Updated car: {}", car);
     }
 
@@ -57,7 +58,7 @@ public class CarStore {
     public void deleteCar(Long carId) {
         throwIfNoSuchCar(carId);
         carRepository.delete(carId);
-        attributeSearchStore.deleteAttributesOf(carId);
+        publisher.publishEvent(new DeletedCarEvent(carId));
         log.debug("Deleted car: {}", carId);
     }
 
