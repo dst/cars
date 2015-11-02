@@ -21,7 +21,6 @@ ext {
 dependencies {
     // Spring Boot
     compile "org.springframework.boot:spring-boot-starter-actuator:${springBootVersion}"
-    compile "org.springframework.boot:spring-boot-starter-cache:${springBootVersion}"
     compile "org.springframework.boot:spring-boot-starter-web:${springBootVersion}"
 
     // Database
@@ -36,6 +35,7 @@ dependencies {
     compile 'org.hibernate:hibernate-validator:5.2.2.Final'
 
     // Cache
+    compile "org.springframework.boot:spring-boot-starter-cache:${springBootVersion}"
     compile 'net.sf.ehcache:ehcache:2.10.1-55'
 
     // Utils
