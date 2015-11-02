@@ -106,14 +106,14 @@ class StoreController {
     }
 
     @ExceptionHandler(CarNotFoundException.class)
-    ResponseEntity<ErrorResp> handleCarNotFoundException(CarNotFoundException ex) {
+    private ResponseEntity<ErrorResp> handleCarNotFoundException(CarNotFoundException ex) {
         log.warn("Car not found: {}", ex.getMessage());
         ErrorResp error = new ErrorResp(CAR_NOT_FOUND_ERR, ex.getMessage(), NOT_FOUND);
         return new ResponseEntity<>(error, NOT_FOUND);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    ResponseEntity<ErrorResp> handleValidationError(MethodArgumentNotValidException ex) {
+    private ResponseEntity<ErrorResp> handleValidationError(MethodArgumentNotValidException ex) {
         BindingResult result = ex.getBindingResult();
         log.warn("Validation error: {}", result);
         String message = ErrorMessageFactory.fromFailedValidation(result);
