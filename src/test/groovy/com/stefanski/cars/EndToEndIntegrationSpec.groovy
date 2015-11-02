@@ -1,7 +1,7 @@
 package com.stefanski.cars
 
-import com.stefanski.cars.search.rest.CarFilters
-import com.stefanski.cars.store.rest.CarToStore
+import com.stefanski.cars.api.CarResource
+import com.stefanski.cars.search.CarFilters
 import groovy.json.JsonSlurper
 import org.springframework.boot.test.IntegrationTest
 import org.springframework.boot.test.SpringApplicationContextLoader
@@ -16,9 +16,9 @@ import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Stepwise
 
+import static com.stefanski.cars.api.CarResourceExamples.CAR_WITHOUT_MODEL_RESOURCE
+import static com.stefanski.cars.api.CarResourceExamples.OPEL_CORSA_RESOURCE
 import static com.stefanski.cars.api.Versions.API_CONTENT_TYPE
-import static com.stefanski.cars.store.rest.CarToStoreExamples.CAR_WITHOUT_MODEL_TO_STORE
-import static com.stefanski.cars.store.rest.CarToStoreExamples.OPEL_CORSA_TO_STORE
 import static org.springframework.http.HttpMethod.DELETE
 import static org.springframework.http.HttpMethod.PUT
 import static org.springframework.http.HttpStatus.*
@@ -54,7 +54,7 @@ class EndToEndIntegrationSpec extends Specification {
 
     def "should return 404 when updating not existing car"() {
         when:
-            def response = updateCar(NOT_EXISTING_CAR_ID, OPEL_CORSA_TO_STORE)
+            def response = updateCar(NOT_EXISTING_CAR_ID, OPEL_CORSA_RESOURCE)
         then:
             response.statusCode == NOT_FOUND
     }
@@ -68,7 +68,7 @@ class EndToEndIntegrationSpec extends Specification {
 
     def "validation should fail when car does not contain model"() {
         when:
-            def response = createCar(CAR_WITHOUT_MODEL_TO_STORE)
+            def response = createCar(CAR_WITHOUT_MODEL_RESOURCE)
         then:
             response.statusCode == BAD_REQUEST
             def jsonResp = parseJson(response)
@@ -78,7 +78,7 @@ class EndToEndIntegrationSpec extends Specification {
 
     def "should create car"() {
         when:
-            def response = createCar(OPEL_CORSA_TO_STORE)
+            def response = createCar(OPEL_CORSA_RESOURCE)
             carId = parseJson(response)['id']
         then:
             response.statusCode == CREATED
@@ -91,21 +91,21 @@ class EndToEndIntegrationSpec extends Specification {
         then:
             response.statusCode == OK
             def jsonResp = parseJson(response)
-            assertTheSame(jsonResp, OPEL_CORSA_TO_STORE)
+            assertTheSame(jsonResp, OPEL_CORSA_RESOURCE)
     }
 
     def "should find car by attributes"() {
         when:
-            def response = findCar(OPEL_CORSA_TO_STORE.attributes)
+            def response = findCar(OPEL_CORSA_RESOURCE.attributes)
         then:
             response.statusCode == OK
             def jsonResp = parseJson(response)
-            assertTheSame(jsonResp[0], OPEL_CORSA_TO_STORE)
+            assertTheSame(jsonResp[0], OPEL_CORSA_RESOURCE)
     }
 
     def "should update car"() {
         given:
-            def car = OPEL_CORSA_TO_STORE
+            def car = OPEL_CORSA_RESOURCE
             car.year = 2015
             car.attributes.remove('origin')
             car.attributes['mileage'] = '1'
@@ -126,7 +126,7 @@ class EndToEndIntegrationSpec extends Specification {
             findCar(carId).statusCode == NOT_FOUND
     }
 
-    private ResponseEntity<String> createCar(CarToStore car) {
+    private ResponseEntity<String> createCar(CarResource car) {
         def entity = requestWith(car)
         return rest.postForEntity(CARS_URL, entity, String)
     }
@@ -140,7 +140,7 @@ class EndToEndIntegrationSpec extends Specification {
         return rest.postForEntity("$CARS_URL/search", entity, String)
     }
 
-    private ResponseEntity<String> updateCar(Long carId, CarToStore car) {
+    private ResponseEntity<String> updateCar(Long carId, CarResource car) {
         def entity = requestWith(car)
         return rest.exchange("$CARS_URL/${carId}", PUT, entity, String)
     }
@@ -159,13 +159,13 @@ class EndToEndIntegrationSpec extends Specification {
         return new HttpEntity<Object>(body, headers)
     }
 
-    private void assertTheSame(Object json, CarToStore car) {
+    private void assertTheSame(Object json, CarResource car) {
         assert json['make'] == car.make
         assert json['model'] == car.model
         assert json['year'] == car.year
         assert json['engineDisplacement'] == car.engineDisplacement
         assert json['attributes'].size() == car.attributes.size()
-        OPEL_CORSA_TO_STORE.attributes.each {name, value ->
+        OPEL_CORSA_RESOURCE.attributes.each { name, value ->
             assert json['attributes'][name] == value
         }
     }

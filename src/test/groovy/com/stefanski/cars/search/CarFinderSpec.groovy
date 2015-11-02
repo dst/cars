@@ -1,7 +1,5 @@
 package com.stefanski.cars.search
 
-import com.stefanski.cars.search.rest.CarFilters
-import com.stefanski.cars.store.Car
 import com.stefanski.cars.store.CarStore
 import spock.lang.Specification
 

@@ -1,4 +1,4 @@
-package com.stefanski.cars.store.rest;
+package com.stefanski.cars.store;
 
 import javax.validation.Valid;
 
@@ -11,13 +11,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.stefanski.cars.api.CarResource;
-import com.stefanski.cars.store.Car;
-import com.stefanski.cars.store.CarNotFoundException;
-import com.stefanski.cars.store.CarStore;
+import com.stefanski.cars.api.ErrorResp;
 import com.stefanski.cars.util.HeadersFactory;
 
 import static com.stefanski.cars.api.Versions.API_CONTENT_TYPE;
-import static com.stefanski.cars.store.rest.ErrorResp.CAR_NOT_FOUND_ERR;
 import static java.net.HttpURLConnection.*;
 import static org.springframework.http.HttpStatus.*;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
@@ -46,9 +43,9 @@ class StoreController {
     })
     ResponseEntity<CreationResp> createCar(
             @ApiParam(value = "Car object that needs to be created")
-            @Valid @RequestBody CarToStore carToStore) {
+            @Valid @RequestBody CarResource carResource) {
 
-        Long carId = carStore.createCar(carToStore.toCar());
+        Long carId = carStore.createCar(carResource.toCar());
         HttpHeaders headers = HeadersFactory.withLocation(carId);
         CreationResp creation = new CreationResp(carId);
         return new ResponseEntity<>(creation, headers, CREATED);
@@ -64,9 +61,9 @@ class StoreController {
             @ApiParam(value = "ID of car that needs to be updated")
             @PathVariable Long carId,
             @ApiParam(value = "Car object that needs to be updated")
-            @Valid @RequestBody CarToStore carToStore) {
+            @Valid @RequestBody CarResource carResource) {
 
-        Car car = carToStore.toCar();
+        Car car = carResource.toCar();
         car.setId(carId);
         carStore.updateCar(car);
         return OK;
@@ -105,7 +102,7 @@ class StoreController {
     @ExceptionHandler(CarNotFoundException.class)
     private ResponseEntity<ErrorResp> handleCarNotFoundException(CarNotFoundException ex) {
         log.warn("Car not found: {}", ex.getMessage());
-        ErrorResp error = new ErrorResp(CAR_NOT_FOUND_ERR, ex.getMessage(), NOT_FOUND);
+        ErrorResp error = new ErrorResp("Car does not exist", ex.getMessage(), NOT_FOUND);
         return new ResponseEntity<>(error, NOT_FOUND);
     }
 }

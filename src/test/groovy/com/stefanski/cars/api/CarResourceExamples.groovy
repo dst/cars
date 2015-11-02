@@ -1,15 +1,17 @@
-package com.stefanski.cars.store.rest
+package com.stefanski.cars.api
+
+
 /**
  * @author Dariusz Stefanski
  */
-class CarToStoreExamples {
+class CarResourceExamples {
 
-    static final CarToStore OPEL_CORSA_TO_STORE = new CarToStore(
+    static final CarResource OPEL_CORSA_RESOURCE = new CarResource(
             make: 'Opel', model: 'Corsa', year: 2010, engineDisplacement: 1300,
             attributes: ['origin': 'Poland', 'mileage': '90120']
     );
 
-    static final CarToStore CAR_WITHOUT_MODEL_TO_STORE = new CarToStore(
+    static final CarResource CAR_WITHOUT_MODEL_RESOURCE = new CarResource(
             make: 'Opel', year: 2010, engineDisplacement: 1300,
             attributes: ['origin': 'Poland', 'mileage': '90120']
     );

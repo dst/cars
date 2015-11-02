@@ -1,4 +1,4 @@
-package com.stefanski.cars.api;
+package com.stefanski.cars.doc;
 
 import com.mangofactory.swagger.configuration.SpringSwaggerConfig;
 import com.mangofactory.swagger.models.dto.ApiInfo;

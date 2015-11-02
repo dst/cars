@@ -1,4 +1,4 @@
-package com.stefanski.cars.search.rest;
+package com.stefanski.cars.search;
 
 import java.util.Map;
 import javax.validation.constraints.NotNull;

@@ -1,4 +1,4 @@
-package com.stefanski.cars.search.rest;
+package com.stefanski.cars.search;
 
 import java.util.List;
 import javax.validation.Valid;
@@ -12,9 +12,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.stefanski.cars.api.CarResource;
+import com.stefanski.cars.search.CarFilters;
 import com.stefanski.cars.search.CarFinder;
 import com.stefanski.cars.store.Car;
-import com.stefanski.cars.store.rest.ErrorResp;
+import com.stefanski.cars.api.ErrorResp;
 
 import static com.stefanski.cars.api.Versions.API_CONTENT_TYPE;
 import static java.net.HttpURLConnection.HTTP_BAD_REQUEST;

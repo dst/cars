@@ -7,9 +7,9 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import com.stefanski.cars.store.rest.ErrorResp;
+import com.stefanski.cars.api.ErrorResp;
+import com.stefanski.cars.util.ErrorMessageFactory;
 
-import static com.stefanski.cars.store.rest.ErrorResp.INVALID_PARAM_ERR;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 /**
@@ -24,7 +24,7 @@ class ValidationExceptionHandler {
         BindingResult result = ex.getBindingResult();
         log.warn("Validation error: {}", result);
         String message = ErrorMessageFactory.fromFailedValidation(result);
-        ErrorResp error = new ErrorResp(INVALID_PARAM_ERR, message, BAD_REQUEST);
+        ErrorResp error = new ErrorResp("Invalid parameter", message, BAD_REQUEST);
         return new ResponseEntity<>(error, BAD_REQUEST);
     }
 }

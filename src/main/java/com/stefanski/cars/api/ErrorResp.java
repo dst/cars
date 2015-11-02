@@ -1,4 +1,4 @@
-package com.stefanski.cars.store.rest;
+package com.stefanski.cars.api;
 
 import com.wordnik.swagger.annotations.ApiModel;
 import com.wordnik.swagger.annotations.ApiModelProperty;
@@ -13,9 +13,6 @@ import org.springframework.http.HttpStatus;
 @Data
 @ApiModel
 public class ErrorResp {
-
-    public static final String INVALID_PARAM_ERR = "Invalid parameter";
-    public static final String CAR_NOT_FOUND_ERR = "Car does not exist";
 
     @ApiModelProperty(value = "short error description", required = true)
     private String error;

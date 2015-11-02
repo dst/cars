@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.stefanski.cars.search.rest.CarFilters;
 import com.stefanski.cars.store.Car;
 import com.stefanski.cars.store.CarStore;
 
