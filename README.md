@@ -61,5 +61,7 @@ Example car in json format which can be stored:
 - code quality: JaCoCo, coveralls
 
 ## Disclaimer
-All Spring Boot Actuator endpoints are turn on and are available at server port. It is convenience when testing,
-but not recommended in production.
+All Spring Boot Actuator endpoints are turned on and are available at server port. It is convenience
+when testing, but not recommended in production.
+
+Embedded H2 and MongoDB databases are used for easy setup.
