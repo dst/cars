@@ -48,7 +48,7 @@ class SearchController {
     })
     ResponseEntity<List<CarResource>> findCars(
             @ApiParam(value = "Filters for searching cars, example: {\"speed\": \"fast\"}")
-            @Valid @RequestBody Map<String, String> filters) {
+            @Valid @RequestBody Map<String, Object> filters) {
 
         List<Car> cars = carFinder.find(filters);
         List<CarResource> carResources = cars.stream()

@@ -23,7 +23,7 @@ public class Car {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private long id;
 
     @NotEmpty
     @Column(nullable = false)
@@ -61,6 +61,15 @@ public class Car {
             map.put(attr.getName(), attr.getValue())
         );
         return map;
+    }
+
+    public Map<String, Object> getBasicFieldsMap() {
+        Map<String, Object>  fieldsMap = new HashMap<>();
+        fieldsMap.put("make", make);
+        fieldsMap.put("model", model);
+        fieldsMap.put("year", year);
+        fieldsMap.put("engineDisplacement", engineDisplacement);
+        return fieldsMap;
     }
 }
 

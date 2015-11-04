@@ -26,7 +26,7 @@ public class CarFinder {
         this.carStore = carStore;
     }
 
-    public List<Car> find(Map<String, String> filters) {
+    public List<Car> find(Map<String, Object> filters) {
         List<Long> cardIds = attributeStore.findCars(filters);
         // I assume a high hit ratio in cars cache, otherwise it'd inefficient and
         // and it'd be better to fetch all cars at once from db

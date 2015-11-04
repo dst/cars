@@ -56,7 +56,7 @@ class AttributeStoreIntegrationSpec extends Specification {
         attributeSearchStore.deleteAttributes(event)
     }
 
-    def "should find car by its attributes"() {
+    def "should find car by its all attributes"() {
         given:
             insertCar(OPEL_CORSA)
         when:
@@ -66,7 +66,17 @@ class AttributeStoreIntegrationSpec extends Specification {
             cars[0] == OPEL_CORSA.id
     }
 
-    def "should find updated car by its attributes"() {
+    def "should find car by year"() {
+        given:
+            insertCar(OPEL_CORSA)
+        when:
+            def cars = attributeSearchStore.findCars(['year': OPEL_CORSA.year])
+        then:
+            cars.size() == 1
+            cars[0] == OPEL_CORSA.id
+    }
+
+    def "should find updated car by its all attributes"() {
         given:
             Car car = OPEL_CORSA
             insertCar(car)

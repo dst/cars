@@ -105,6 +105,15 @@ class EndToEndIntegrationSpec extends Specification {
             assertTheSame(jsonResp[0], OPEL_CORSA_RESOURCE)
     }
 
+    def "should find car by year"() {
+        when:
+            def response = findCar(['year': OPEL_CORSA_RESOURCE.year])
+        then:
+            response.statusCode == OK
+            def jsonResp = parseJson(response)
+            assertTheSame(jsonResp[0], OPEL_CORSA_RESOURCE)
+    }
+
     def "should update car"() {
         given:
             opelCorsa = OPEL_CORSA_RESOURCE
@@ -147,7 +156,7 @@ class EndToEndIntegrationSpec extends Specification {
         return rest.getForEntity("$CARS_URL/$carId", String)
     }
 
-    private ResponseEntity<String> findCar(Map<String, String> attributes) {
+    private ResponseEntity<String> findCar(Map<String, Object> attributes) {
         def entity = requestWith(attributes)
         return rest.postForEntity("$CARS_URL/search", entity, String)
     }

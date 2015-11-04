@@ -56,7 +56,7 @@ public class AttributeStore {
         collection.remove(doc);
     }
 
-    public List<Long> findCars(Map<String, String> query) {
+    public List<Long> findCars(Map<String, Object> query) {
         BasicDBObject queryDoc = new BasicDBObject(query);
         BasicDBObject fieldsDoc = new BasicDBObject(ID_FIELD, 1);
         List<DBObject> dbObjects = collection.find(queryDoc, fieldsDoc).toArray();
@@ -67,6 +67,7 @@ public class AttributeStore {
 
     private BasicDBObject createDocument(Car car) {
         BasicDBObject doc = new BasicDBObject(car.getAttributesMap());
+        doc.putAll(car.getBasicFieldsMap());
         doc.put(ID_FIELD, car.getId());
         return doc;
     }

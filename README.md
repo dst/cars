@@ -3,8 +3,8 @@
 [![Coverage Status](https://coveralls.io/repos/dst/cars/badge.png)](https://coveralls.io/r/dst/cars)
 
 Entity-attribute-value (EAV) model implementation based on car. Cars in EAV model are kept in
-a rational database (embedded H2). Attributes are also kept in a document database (embedded MongoDB)
-to support faster search operations.
+a rational database (embedded H2). Attributes together with basic fields are also kept in a
+document database (embedded MongoDB) to support faster search operations.
 
 Application can be run as fat jar and RESTful API is available.
 
@@ -60,7 +60,10 @@ Example car in json format which can be stored in system:
 
 Example search filter:
 
-    {"speed": "fast"}
+    {
+      "year": 2010,
+      "speed": "fast"
+    }
 
 ## Technology stack
 - back-end: Java 8, Spring Boot, Spring Data, JPA with Hibernate, embedded H2, embedded MongoDB, Lombok, Logback
