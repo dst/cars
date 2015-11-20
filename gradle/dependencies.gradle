@@ -14,7 +14,7 @@ uptodate {
 }
 
 ext {
-    springBootVersion = '1.3.0.M1'
+    springBootVersion = '1.3.0.RELEASE'
     spockVersion = '1.0-groovy-2.4'
 }
 
@@ -37,7 +37,7 @@ dependencies {
 
     // Cache
     compile "org.springframework.boot:spring-boot-starter-cache:${springBootVersion}"
-    compile 'net.sf.ehcache:ehcache:2.10.1-55'
+    compile 'net.sf.ehcache:ehcache:2.10.1.1.11'
 
     // Utils
     compile 'org.projectlombok:lombok:1.16.6'
