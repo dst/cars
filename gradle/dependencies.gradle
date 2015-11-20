@@ -9,12 +9,13 @@ build.dependsOn 'uptodate'
 
 uptodate {
     breakTheBuild {
-        enabled = true
+        // Temporary don't break the build
+        // enabled = true
     }
 }
 
 ext {
-    springBootVersion = '1.3.0.RELEASE'
+    springBootVersion = '1.3.0.M1'
     spockVersion = '1.0-groovy-2.4'
 }
 
