@@ -3,7 +3,6 @@ statusListener(OnConsoleStatusListener)
 String logPattern = "%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
 
 appender("CONSOLE", ConsoleAppender) {
-    append = true
     encoder(PatternLayoutEncoder) {
         pattern = logPattern
     }
