@@ -1,6 +1,6 @@
 repositories {
     mavenCentral()
-    maven { url "http://repo.spring.io/libs-snapshot" }
+    maven { url 'http://repo.spring.io/libs-snapshot' }
 }
 
 apply plugin: 'com.ofg.uptodate'
@@ -47,7 +47,7 @@ dependencies {
     compile 'com.mangofactory:swagger-springmvc:1.0.2'
 
     // Tests
-    testCompile "cglib:cglib:3.2.0"
+    testCompile 'cglib:cglib:3.2.0'
     testCompile "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
     testCompile "org.spockframework:spock-core:${spockVersion}"
     testCompile "org.spockframework:spock-spring:${spockVersion}"
