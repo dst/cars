@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# It generates useful reports about code and opens it.
+# Generates useful reports about code and opens it.
 #
 # Author: Dariusz Stefanski
 

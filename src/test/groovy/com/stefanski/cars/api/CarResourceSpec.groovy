@@ -21,7 +21,6 @@ class CarResourceSpec extends Specification {
             resource.model == 'Corsa'
     }
 
-
     def "should convert resource to car"() {
         when:
             Car car = OPEL_CORSA_RESOURCE.toCar()

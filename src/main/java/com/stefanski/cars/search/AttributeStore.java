@@ -36,27 +36,27 @@ public class AttributeStore {
     }
 
     @EventListener
-    public void insertAttributes(NewCarEvent event) {
+    void insertAttributes(NewCarEvent event) {
         log.debug("Handling event {}", event);
         BasicDBObject doc = createDocument(event.getCar());
         collection.insert(doc);
     }
 
     @EventListener
-    public void updateAttributes(UpdatedCarEvent event) {
+    void updateAttributes(UpdatedCarEvent event) {
         log.debug("Handling event {}", event);
         BasicDBObject doc = createDocument(event.getCar());
         collection.save(doc);
     }
 
     @EventListener
-    public void deleteAttributes(DeletedCarEvent event) {
+    void deleteAttributes(DeletedCarEvent event) {
         log.debug("Handling event {}", event);
         BasicDBObject doc = new BasicDBObject(ID_FIELD, event.getCarId());
         collection.remove(doc);
     }
 
-    public List<Long> findCars(Map<String, Object> query) {
+    List<Long> findCars(Map<String, Object> query) {
         BasicDBObject queryDoc = new BasicDBObject(query);
         BasicDBObject fieldsDoc = new BasicDBObject(ID_FIELD, 1);
         List<DBObject> dbObjects = collection.find(queryDoc, fieldsDoc).toArray();
