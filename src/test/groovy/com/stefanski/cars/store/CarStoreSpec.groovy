@@ -63,7 +63,7 @@ class CarStoreSpec extends Specification {
             Car car = new Car(id: CAR_ID)
             carRepository.save(_) >> car
         when:
-            def carId = carService.createCar(car)
+            Long carId = carService.createCar(car)
         then:
             carId == CAR_ID
             1 * publisher.publishEvent(_ as NewCarEvent)
